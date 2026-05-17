@@ -183,6 +183,24 @@ src/main/resources/
 | Driver | `org.postgresql.Driver` |
 | DDL | `ddl-auto: update` (tự tạo/cập nhật schema) |
 
+
+---
+
+## Database Indexes
+
+| Bảng | Cột | Tên Index |
+|---|---|---|
+| `category` | `id` | `category_pkey` |
+| `order_item` | `order_id`, `product_id` | `order_item_order_id_product_id_idx` |
+| `order_item` | `id` | `order_item_pkey` |
+| `order_item` | `product_id` | `order_item_product_id_idx` |
+| `orders` | `id` | `order_pkey` |
+| `orders` | `user_id` | `orders_user_id_idx` |
+| `product` | `category_id` | `product_category_id_idx` |
+| `product` | `id` | `product_pkey` |
+| `users` | `username` | `ukr43af9ap4edm43mmtq01oddj6` |
+| `users` | `id` | `user_pkey` |
+
 ---
 
 ## API Endpoints
