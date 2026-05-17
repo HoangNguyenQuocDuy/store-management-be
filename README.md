@@ -9,7 +9,6 @@ Hệ thống gồm 2 nhóm người dùng:
 
 Backend cung cấp REST API, xác thực bằng JWT. Ảnh sản phẩm được lưu trên **AWS S3** (upload trực tiếp từ browser qua presigned URL). Khi đơn hàng được tạo, hệ thống gửi email thông báo qua **AWS SES**.
 
-#Note: hệ thống chỉ demo dùng SES môi trường Sandbox nên phải xác thực email trước khi nhận mail (//TODO)
 ---
 
 ## Các luồng chính
@@ -74,6 +73,19 @@ Admin → PUT <presigned-url>         →  Upload ảnh thẳng lên S3 (không 
 Admin → GET /admin/orders               →  Xem tất cả đơn hàng (mọi user)
 Admin → PUT /admin/orders/{id}/status   →  Cập nhật trạng thái: PENDING → CONFIRMED / CANCELLED -> Gửi mail cho User
 ```
+
+---
+
+## Email Thông báo (AWS SES)
+
+> **Lưu ý — SES Sandbox:** Hiện tại hệ thống đang chạy ở chế độ **SES Sandbox**. Mọi địa chỉ email nhận (cả người dùng lẫn admin) **phải được xác thực thủ công** trong AWS SES Console trước khi có thể nhận mail. Muốn gửi tới email bất kỳ cần request production access từ AWS.
+
+### Biến môi trường liên quan đến SES
+
+| Biến | Mô tả |
+|------|-------|
+| `AWS_SES_ADMIN_EMAIL` | Email admin nhận thông báo đơn hàng mới (type 3) |
+| `AWS_SES_SENDER_EMAIL` | Địa chỉ gửi mail (`no-reply@...`) — phải được verify trong SES |
 
 ---
 
