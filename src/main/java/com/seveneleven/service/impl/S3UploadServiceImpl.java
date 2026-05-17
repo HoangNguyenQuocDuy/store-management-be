@@ -14,6 +14,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -71,6 +72,35 @@ public class S3UploadServiceImpl implements S3UploadService {
         } catch (Exception e) {
             log.error("#S3UploadServiceImpl.uploadImage - Failed to upload image to S3 due to AWS error", e);
             throw new RuntimeException("AWS ERROR: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteImage(String imageUrl) {
+        log.info("#S3UploadServiceImpl.deleteImage - START - url: {}", imageUrl);
+
+        if (!awsProperties.isEnabled() || s3Client == null) {
+            log.warn("#S3UploadServiceImpl.deleteImage - S3 disabled, skipping deletion");
+            return;
+        }
+
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return;
+        }
+
+        try {
+            String key = imageUrl.substring(imageUrl.indexOf(".amazonaws.com/") + ".amazonaws.com/".length());
+
+            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                    .bucket(awsProperties.getS3().getBucket())
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(deleteRequest);
+            log.info("#S3UploadServiceImpl.deleteImage - Deleted S3 object: {}", key);
+
+        } catch (Exception e) {
+            log.error("#S3UploadServiceImpl.deleteImage - Failed to delete S3 object from url: {}", imageUrl, e);
         }
     }
 }

@@ -10,6 +10,7 @@ import com.seveneleven.repository.CategoryRepository;
 import com.seveneleven.repository.ProductRepository;
 import com.seveneleven.repository.spec.ProductSpec;
 import com.seveneleven.service.ProductService;
+import com.seveneleven.service.S3UploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final S3UploadService s3UploadService;
 
     @Override
     public PageResponse<ProductResponse> getAllProducts(String search, Long categoryId, Pageable pageable) {
@@ -76,6 +78,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("#ProductServiceImpl.update - START - id: {}, name: {}", id, request.getName());
 
         Product product = findProduct(id);
+        String oldImageUrl = product.getImageUrl();
         Category category = findCategory(request.getCategoryId());
         product.setCategory(category);
         product.setName(request.getName());
@@ -83,6 +86,9 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(request.getPrice());
         product.setStockQuantity(request.getStockQuantity());
         product.setImageUrl(request.getImageUrl());
+        if (oldImageUrl != null && !oldImageUrl.equals(request.getImageUrl())) {
+            s3UploadService.deleteImage(oldImageUrl);
+        }
         ProductResponse response = ProductResponse.from(productRepository.save(product));
         log.info("#ProductServiceImpl.update - updated product #{}", id);
 
@@ -94,8 +100,9 @@ public class ProductServiceImpl implements ProductService {
     public void delete(Long id) {
         log.info("#ProductServiceImpl.delete - START - id: {}", id);
 
-        findProduct(id);
+        Product product = findProduct(id);
         productRepository.deleteById(id);
+        s3UploadService.deleteImage(product.getImageUrl());
 
         log.info("#ProductServiceImpl.delete - deleted product #{}", id);
     }

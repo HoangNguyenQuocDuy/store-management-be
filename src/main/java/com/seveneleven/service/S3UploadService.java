@@ -6,4 +6,6 @@ public interface S3UploadService {
 
     String uploadImage(MultipartFile file);
 
+    void deleteImage(String imageUrl);
+
 }
