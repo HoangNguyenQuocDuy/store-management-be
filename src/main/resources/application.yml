@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres?prepareThreshold=0
+    username: postgres.xukzxkdnwfypjacbzexs
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc.lob.non_contextual_creation: true
+        .orm:
+          jdbc:
+            bind: trace
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: NONE
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: 8080
+
+aws:
+  enabled: ${AWS_ENABLED:false}
+  access-key: ${AWS_ACCESS_KEY:}
+  secret-key: ${AWS_SECRET_KEY:}
+  region: ${AWS_REGION:us-east-1}
+  s3:
+    bucket: ${AWS_BUCKET:}
+    role-arn: ${AWS_UPLOAD_ROLE:}
+    role-session-name: "s3-upload"
+  ses:
+    role-arn: ${NOTIFICATION_ROLE_ARN:}
+    admin-email: ${NOTIFICATION_ADMIN_EMAIL:admin@test.vn}
+    sender-email: ${NOTIFICATION_SENDER_EMAIL:}
+    role-session-name: "notification"
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:lLwQX0OkEzgQT1Qv52JU4CxY7J4XdrZROjjzRsCbYuOgsreFmmdao2RkD50O7i1P}
+    expiration-ms: 86400000  # 24 hours
+
+logging:
+  level:
+    com.seveneleven: INFO
+    org.springframework.security: WARN

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0; padding:0; background-color:#f0f0f0; font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f0f0; padding:30px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+        <tr>
+          <td th:style="'background:' + ${brandGreen} + '; padding:24px 32px; text-align:center;'">
+            <h1 style="color:white; margin:0; font-size:28px; letter-spacing:2px;" th:text="${storeName}">QD Store</h1>
+            <p style="color:rgba(255,255,255,0.85); margin:6px 0 0; font-size:14px;">Xác nhận đơn hàng</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px; color:#333; font-size:15px; line-height:1.6;">
+            <p>Xin chào <strong th:text="${userFullName}">Khách hàng</strong>,</p>
+            <p>Đơn hàng <strong>#<span th:text="${orderId}">0</span></strong> của bạn đã được tiếp nhận thành công vào lúc <strong th:text="${createdAt}">00:00</strong>.</p>
+
+            <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+              <thead>
+                <tr th:style="'background:' + ${brandGreen} + '; color:white;'">
+                  <th style="padding:10px; text-align:left;">Sản phẩm</th>
+                  <th style="padding:10px; text-align:center;">SL</th>
+                  <th style="padding:10px; text-align:right;">Đơn giá</th>
+                  <th style="padding:10px; text-align:right;">Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item : ${items}">
+                  <td style="padding:10px; border-bottom:1px solid #eee;" th:text="${item.productName}">Sản phẩm</td>
+                  <td style="padding:10px; border-bottom:1px solid #eee; text-align:center;" th:text="${item.quantity}">1</td>
+                  <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;" th:text="${item.unitPrice}">0đ</td>
+                  <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;" th:text="${item.subtotal}">0đ</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr th:style="'border-top:2px solid ' + ${brandGreen}">
+                  <td colspan="3" style="padding:12px; text-align:right; font-weight:bold;">Tổng cộng:</td>
+                  <td th:style="'padding:12px; text-align:right; font-weight:bold; font-size:16px; color:' + ${brandGreen}"
+                      th:text="${totalAmount}">0đ</td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <p><strong>Địa chỉ giao hàng:</strong> <span th:text="${shippingAddress}">Địa chỉ</span></p>
+            <p th:if="${note != null and !#strings.isEmpty(note)}">
+              <strong>Ghi chú:</strong> <span th:text="${note}">Ghi chú</span>
+            </p>
+            <p>
+              <strong>Trạng thái:</strong>&#160;
+              <span th:style="'display:inline-block; padding:4px 14px; border-radius:20px; color:' + ${statusColor} + '; font-weight:bold; font-size:13px; border:1px solid ' + ${statusColor}"
+                    th:text="${statusLabel}">Trạng thái</span>
+            </p>
+            <p style="margin-top:24px; color:#666;">Chúng tôi sẽ sớm xác nhận và xử lý đơn hàng của bạn.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#333; padding:16px 32px; text-align:center;">
+            <p style="color:#aaa; margin:0; font-size:12px;">
+              © 2026 <span th:text="${storeName}">QD Store</span>. Cảm ơn bạn đã tin tưởng và mua hàng!
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>
